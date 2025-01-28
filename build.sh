@@ -134,17 +134,18 @@ KERVER=$(make kernelversion)
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
-make -j$(nproc) O=out ARCH=arm64 asus/X00TD_defconfig "${MAKE[@]}" 2>&1 | tee build.log
+make -j$(nproc) O=out ARCH=arm64 asus/X00TD_defconfig "${MAKE[@]}" 2>&1 | tee error.log
 make -j$(nproc) ARCH=arm64 O=out \
     ARCH=$ARCH \
     SUBARCH=$ARCH \
     CC="$ClangPath/bin/clang" \
     CROSS_COMPILE=aarch64-linux-gnu- \
     HOSTCC="$ClangPath/bin/clang" \
-    HOSTCXX="$ClangPath/bin/clang++" ${ClangMoreStrings} "${MAKE[@]}" 2>&1 | tee build.log
+    HOSTCXX="$ClangPath/bin/clang++" ${ClangMoreStrings} "${MAKE[@]}" 2>&1 | tee error.log
 
    if ! [ -a "$IMAGE" ]; then
-	finerr
+	finerr "error.log" "Compile Error!!"
+	msg "|| Compile Failed!!! ||"
 	exit 1
    fi
    git clone --depth=1 https://github.com/Tiktodz/AnyKernel3 -b 419 AnyKernel
@@ -172,13 +173,14 @@ function push() {
 }
 # Find Error
 function finerr() {
-    curl -s -X POST "$BOT_MSG_URL" \
-        -d chat_id="$TG_CHAT_ID" \
-        -d "disable_web_page_preview=true" \
-        -d "parse_mode=markdown" \
-        -d text="❌ Tetap menyerah...Pasti bisa!!!" "build.log"
+    curl -F document=@"$1" "$BOT_MSG_URL" \
+	    -F chat_id="$TG_CHAT_ID"  \
+	    -F "disable_web_page_preview=true" \
+	    -F "parse_mode=Markdown" \
+	    -F caption="$2"
     exit 1
 }
+
 # Zipping
 function zipping() {
 	cd AnyKernel || exit 1
