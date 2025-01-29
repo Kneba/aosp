@@ -127,7 +127,7 @@ cd ${KERNEL_ROOTDIR}
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
-make -j$(nproc) O=out ARCH=arm64 vendor/X00TD_defconfig
+make -j$(nproc) O=out ARCH=arm64 asus/X00TD_defconfig
 make -j$(nproc) ARCH=arm64 O=out \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
