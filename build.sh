@@ -38,7 +38,7 @@ VARIANT=EAS
 BASE=android13-4.19-sdm660
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-UDC-4-19-315"
+ZIPNAME="$KERNELNAME-UDC-4-19-318"
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
@@ -55,7 +55,7 @@ mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 #git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
-https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
+git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
 #tar -xf clang-r498229b.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
