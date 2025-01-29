@@ -54,10 +54,10 @@ rm -rf $ClangPath/*
 mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-#git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
+git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
 #git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
-tar -xf clang-r498229b.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
+#tar -xf clang-r498229b.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
@@ -128,7 +128,7 @@ export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
 make -j$(nproc) O=out ARCH=arm64 asus/X00TD_defconfig
-make -j$(nproc) ARCH=arm64 O=out \
+make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
     CC=${ClangPath}/bin/clang \
