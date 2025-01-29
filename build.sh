@@ -55,9 +55,9 @@ mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 #git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
-git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
-#tar -xf clang-r498229b.tar.gz -C $ClangPath
+#git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
+tar -xf clang-r498229b.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
@@ -77,9 +77,9 @@ tar -xf gcc32.tar.gz -C $GCCbPath
 
 # Prepared
 KERNEL_ROOTDIR=$(pwd)/kernel # IMPORTANT ! Fill with your kernel source root directory.
-export LD=ld.lld
-export HOSTLD=ld.lld
-export CCACHE=1
+#export LD=ld.lld
+#export HOSTLD=ld.lld
+#export CCACHE=1
 export KBUILD_BUILD_USER=queen # Change with your own name or else.
 export KBUILD_BUILD_HOST=github-actions # Change with your own host name or else.
 IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb
