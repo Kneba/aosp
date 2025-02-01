@@ -38,7 +38,7 @@ VARIANT=EAS
 BASE=android13-4.19-sdm660
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-UDC-4-19-318"
+ZIPNAME="$KERNELNAME-UDC-4-19-321"
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
