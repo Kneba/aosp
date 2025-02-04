@@ -38,7 +38,7 @@ VARIANT=EAS
 BASE=android13-4.19-sdm660
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-UDC-4-19-321"
+ZIPNAME="$KERNELNAME-UDC-4-19-255"
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
@@ -46,7 +46,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b master kernel
+git clone --depth=1 https://$USERNAME:$TOKEN@github.com/texascake/compile -b eol kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
