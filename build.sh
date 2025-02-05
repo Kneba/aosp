@@ -46,7 +46,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/texascake/compile -b eol kernel
+git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b master kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -109,7 +109,7 @@ tg_post_build() {
     -F chat_id="$2"  \
     -F "disable_web_page_preview=true" \
     -F "parse_mode=html" \
-    -F caption="$3 | <b>MD5 Checksum : </b><code>$MD5CHECK</code>"  
+    -F caption="$3"  
 }
 
 # Telegram messaging
@@ -163,6 +163,8 @@ function push() {
         -F "parse_mode=html" \
         -F caption="✅<b>Build Done</b>
         -<code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>
+        <b>♏ MD5: </b>
+        -<code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
         -<code>$DATE</code>
         <b>🐧 Linux Version: </b>
