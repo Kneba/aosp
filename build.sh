@@ -37,9 +37,6 @@ CODENAME=Nothing
 VARIANT=EAS
 BASE=android13-4.19-sdm660
 
-# The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-4-19-321"
-
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 
@@ -96,6 +93,9 @@ command -v java > /dev/null 2>&1
 # Check Kernel Version
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
+# The name of the Kernel, to name the ZIP
+ZIPNAME="$KERNELNAME-$KERVER"
+
 # Telegram
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
 export BOT_BUILD_URL="https://api.telegram.org/bot$TG_TOKEN/sendDocument"
@@ -128,7 +128,7 @@ export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
 make -j$(nproc) O=out ARCH=arm64 asus/X00TD_defconfig
-make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out \
+make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 LLVM_IAS=1 \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
     CC=${ClangPath}/bin/clang \
