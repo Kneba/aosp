@@ -163,7 +163,7 @@ function push() {
         -F "parse_mode=html" \
         -F caption="✅<b>Build Done</b>
         -<code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>
-        <b>♏ MD5: </b>
+        <b>Ⓜ MD5: </b>
         -<code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
         -<code>$DATE</code>
@@ -192,13 +192,18 @@ function zipping() {
  
 	## Prepare a final zip variable
 	ZIP_FINAL="$ZIPNAME-$DATE"
+#	mv $ZIP_FINAL* $KERNEL_ROOTDIR/ZIP_FINAL.zip
+#	cd $KERNEL_ROOTDIR
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
 
+	mv $ZIP_FINAL* kernel.zip
 	curl -sLo zipsigner-3.0-dexed.jar https://github.com/Magisk-Modules-Repo/zipsigner/raw/master/bin/zipsigner-3.0-dexed.jar
-	java -jar zipsigner-3.0-dexed.jar "$ZIP_FINAL".zip "$ZIP_FINAL"-signed.zip
+	java -jar zipsigner-3.0-dexed.jar kernel.zip kernel-signed.zip
 	ZIP_FINAL="$ZIP_FINAL-signed"
+ 	mv kernel-signed.zip $ZIP_FINAL.zip
+	MD5CHECK=$(md5sum "$ZIP_FINAL.zip" | cut -d' ' -f1)
 	cd ..
 }
 
