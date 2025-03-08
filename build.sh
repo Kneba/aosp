@@ -33,8 +33,7 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 KERNELNAME=TheOneMemory
-CODENAME=Nothing
-VARIANT=EAS
+CODENAME=TREE
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -94,7 +93,7 @@ command -v java > /dev/null 2>&1
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-$KERVER"
+ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
 
 # Telegram
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
