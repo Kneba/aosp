@@ -33,7 +33,7 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 KERNELNAME=TheOneMemory
-CODENAME=TREE
+CODENAME=TreeDeprecated
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
