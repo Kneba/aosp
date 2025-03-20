@@ -33,7 +33,7 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 KERNELNAME=TheOneMemory
-CODENAME=TreeDeprecated
+CODENAME=Tree
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -50,10 +50,10 @@ rm -rf $ClangPath/*
 mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
+#git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
 #git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/master/clang-r498229b.tar.gz -O "clang-r498229b.tar.gz"
-#tar -xf clang-r498229b.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
+tar -xf clang-r522817.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
@@ -82,8 +82,8 @@ IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb
 CLANG_VER="$("$ClangPath"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
 export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
-DATE=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
-DATE2=$(TZ=Asia/Jakarta date +"%Y%m%d")
+DATE=$(TZ=Asia/Jakarta date +"%Y%m%d")
+DATE2=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
 START=$(date +"%s")
 
 # Java
