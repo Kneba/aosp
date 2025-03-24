@@ -33,7 +33,7 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 KERNELNAME=TheOneMemory
-CODENAME=Tree
+CODENAME=TreeWIP
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -42,7 +42,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b master kernel
+git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b wip kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
