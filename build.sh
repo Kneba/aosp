@@ -32,8 +32,8 @@ GCCaPath="${MainPath}/GCC64"
 GCCbPath="${MainPath}/GCC32"
 
 # Identity
-KERNELNAME=TheOneMemory
-CODENAME=TreeWIP
+KERNELNAME=TOM
+CODENAME=Nightly
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -42,7 +42,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b wip kernel
+git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/electrolaboratory/msm-4.19 -b master kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -93,7 +93,7 @@ command -v java > /dev/null 2>&1
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
+ZIPNAME="$KERNELNAME-$CODENAME-SUSFS-$KERVER"
 
 # Telegram
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
@@ -187,10 +187,10 @@ function finerr() {
 # Zipping
 function zipping() {
 	cd AnyKernel || exit 1
-	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE2"
+	ZIP_FINAL="$ZIPNAME-$DATE"
 #	mv $ZIP_FINAL* $KERNEL_ROOTDIR/ZIP_FINAL.zip
 #	cd $KERNEL_ROOTDIR
 
