@@ -82,8 +82,8 @@ IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb
 CLANG_VER="$("$ClangPath"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
 export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
-DATE=$(TZ=Asia/Jakarta date +"%Y%m%d")
-DATE2=$(TZ=Asia/Jakarta date +"%Y%m%d-%H%M")
+DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
+DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 START=$(date +"%s")
 
 # Java
