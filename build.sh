@@ -86,8 +86,8 @@ DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 START=$(date +"%s")
 
-sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' arch/arm64/configs/asus/X00TD_defconfig
-sed -i 's/.*CONFIG_LTO_NONE=.*/CONFIG_LTO_NONE=n/g' arch/arm64/configs/asus/X00TD_defconfig
+sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
+sed -i 's/.*CONFIG_LTO_NONE=.*/CONFIG_LTO_NONE=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
