@@ -33,7 +33,7 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 KERNELNAME=TOM
-CODENAME=Nightly
+CODENAME=WIP
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -42,7 +42,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/electrolaboratory/msm-4.19 -b master kernel
+git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b master kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -86,8 +86,8 @@ DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 START=$(date +"%s")
 
-sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
-sed -i 's/.*CONFIG_LTO_NONE=.*/CONFIG_LTO_NONE=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
+#sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
+#sed -i 's/.*CONFIG_LTO_NONE=.*/CONFIG_LTO_NONE=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
