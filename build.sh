@@ -42,7 +42,7 @@ MANUFACTURERINFO="ASUSTek Computer Inc."
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b master kernel
+git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b stable-release kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -96,7 +96,7 @@ command -v java > /dev/null 2>&1
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-$CODENAME-SUSFS-$KERVER"
+ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
 
 # Telegram
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
