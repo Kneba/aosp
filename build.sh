@@ -165,19 +165,19 @@ function push() {
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
         -F caption="✅<b>Build Done</b>
-        -<code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>
+        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>
         <b>Ⓜ MD5: </b>
-        -<code>$MD5CHECK</code>
+        - <code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
-        -<code>$DATE3</code>
+        - <code>$DATE</code>
         <b>🐧 Linux Version: </b>
-        -<code>$KERVER</code>
+        - <code>$KERVER</code>
          <b>💿 Compiler: </b>
-        -<code>$KBUILD_COMPILER_STRING</code>
+        - <code>$KBUILD_COMPILER_STRING</code>
         <b>📱 Device: </b>
-        -<code>($MANUFACTURERINFO)</code>
+        - <code>($MANUFACTURERINFO)</code>
         <b>🆑 Changelog: </b>
-        -<code>$COMMIT_HEAD</code>"
+        - <code>$COMMIT_HEAD</code>"
 }
 # Find Error
 function finerr() {
@@ -191,7 +191,7 @@ function finerr() {
 # Zipping
 function zipping() {
 	cd AnyKernel || exit 1
-	cp -af "$KERNEL_ROOTDIR"/changelog AnyKernel/META-INF/com/google/android/aroma/changelog.txt
+	cp -af "$KERNEL_ROOTDIR"/changelog "$KERNEL_ROOTDIR"/AnyKernel/META-INF/com/google/android/aroma/changelog.txt
 	mv -f anykernel-real.sh anykernel.sh
 	sed -i "s/kernel.string=.*/kernel.string=$KERNELNAME/g" anykernel.sh
 	sed -i "s/kernel.type=.*/kernel.type=Stock-OverClock/g" anykernel.sh
@@ -210,7 +210,7 @@ function zipping() {
 	sed -i "s/device.name5=.*/device.name5=ASUS_X00T/g" anykernel.sh
 	sed -i "s/X00TD=.*/X00TD=1/g" anykernel.sh
 
-	cd AnyKernel/META-INF/com/google/android
+	cd "$KERNEL_ROOTDIR"/AnyKernel/META-INF/com/google/android
 	mv -f update-binary update-binary-installer
 	mv -f aroma-binary update-binary
 	sed -i "s/KNAME/$KERNELNAME/g" aroma-config
@@ -219,7 +219,7 @@ function zipping() {
 	sed -i "s/KDEVICE/Zenfone Max Pro M1/g" aroma-config
 	sed -i "s/KBDATE/$DATE3/g" aroma-config
 	sed -i "s/KVARIANT/$CODENAME/g" aroma-config
-	cd AnyKernel
+	cd "$KERNEL_ROOTDIR"/AnyKernel
 
 	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder anykernel-real.sh .gitignore  zipsigner* *.zip
  
