@@ -32,12 +32,14 @@ GCCaPath="${MainPath}/GCC64"
 GCCbPath="${MainPath}/GCC32"
 
 # Identity
+ANDRVER=11-15
 KERNELNAME=TOM
-CODENAME=WIP
+CODENAME=Nightly
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
+DEVICE=X00TD
 
 # Clone Kernel Source
 echo " "
@@ -50,8 +52,6 @@ rm -rf $ClangPath/*
 mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-#git clone --depth=1 https://gitlab.com/ImSurajxD/clang-r450784d -b master $ClangPath
-#git clone --depth=1 https://gitlab.com/magchuzPM/clang-r498229b.git -b master $ClangPath
 wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 tar -xf clang-r522817.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
@@ -84,6 +84,7 @@ LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
 export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
 DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
+DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
@@ -153,7 +154,7 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 LLVM_IAS=1 \
 	finerr
 	exit 1
    fi
-   git clone --depth=1 https://github.com/Tiktodz/AnyKernel3 -b 419 AnyKernel
+   git clone --depth=1 https://github.com/sandatjepil/AnyKernel3 -b four19 AnyKernel
    cp $IMAGE AnyKernel
 }
 # Push kernel to telegram
@@ -168,7 +169,7 @@ function push() {
         <b>Ⓜ MD5: </b>
         -<code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
-        -<code>$DATE</code>
+        -<code>$DATE3</code>
         <b>🐧 Linux Version: </b>
         -<code>$KERVER</code>
          <b>💿 Compiler: </b>
@@ -190,12 +191,40 @@ function finerr() {
 # Zipping
 function zipping() {
 	cd AnyKernel || exit 1
-	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	cp -af "$KERNEL_ROOTDIR"/changelog AnyKernel/META-INF/com/google/android/aroma/changelog.txt
+	mv -f anykernel-real.sh anykernel.sh
+	sed -i "s/kernel.string=.*/kernel.string=$KERNELNAME/g" anykernel.sh
+	sed -i "s/kernel.type=.*/kernel.type=Stock-OverClock/g" anykernel.sh
+	sed -i "s/kernel.for=.*/kernel.for=$DEVICE/g" anykernel.sh
+	sed -i "s/kernel.compiler=.*/kernel.compiler=$KBUILD_COMPILER_STRING/g" anykernel.sh
+	sed -i "s/kernel.made=.*/kernel.made=$KBUILD_BUILD_USER/g" anykernel.sh
+	sed -i "s/kernel.version=.*/kernel.version=$KERVER/g" anykernel.sh
+	sed -i "s/message.word=.*/message.word=Appreciate your efforts for choosing TheOneMemory kernel./g" anykernel.sh
+	sed -i "s/build.date=.*/build.date=$DATE3/g" anykernel.sh
+	sed -i "s/build.type=.*/build.type=$CODENAME/g" anykernel.sh
+	sed -i "s/supported.versions=.*/supported.versions=$ANDRVER/g" anykernel.sh
+	sed -i "s/device.name1=.*/device.name1=X00TD/g" anykernel.sh
+	sed -i "s/device.name2=.*/device.name2=X00T/g" anykernel.sh
+	sed -i "s/device.name3=.*/device.name3=Zenfone Max Pro M1 (X00TD)/g" anykernel.sh
+	sed -i "s/device.name4=.*/device.name4=ASUS_X00TD/g" anykernel.sh
+	sed -i "s/device.name5=.*/device.name5=ASUS_X00T/g" anykernel.sh
+	sed -i "s/X00TD=.*/X00TD=1/g" anykernel.sh
+
+	cd AnyKernel/META-INF/com/google/android
+	mv -f update-binary update-binary-installer
+	mv -f aroma-binary update-binary
+	sed -i "s/KNAME/$KERNELNAME/g" aroma-config
+	sed -i "s/KVER/$KERVER/g" aroma-config
+	sed -i "s/KAUTHOR/$KBUILD_BUILD_USER/g" aroma-config
+	sed -i "s/KDEVICE/Zenfone Max Pro M1/g" aroma-config
+	sed -i "s/KBDATE/$DATE3/g" aroma-config
+	sed -i "s/KVARIANT/$CODENAME/g" aroma-config
+	cd AnyKernel
+
+	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder anykernel-real.sh .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
 	ZIP_FINAL="$ZIPNAME-$DATE2"
-#	mv $ZIP_FINAL* $KERNEL_ROOTDIR/ZIP_FINAL.zip
-#	cd $KERNEL_ROOTDIR
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
