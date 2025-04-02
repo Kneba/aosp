@@ -154,7 +154,7 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 LLVM_IAS=1 \
 	finerr
 	exit 1
    fi
-   git clone --depth=1 https://github.com/sandatjepil/AnyKernel3 -b four19 AnyKernel
+   git clone --depth=1 https://github.com/sandatjepil/AnyKernel3 -b kesu AnyKernel
    cp $IMAGE AnyKernel
 }
 # Push kernel to telegram
@@ -221,10 +221,10 @@ function zipping() {
 	sed -i "s/KVARIANT/$CODENAME/g" aroma-config
 	cd AnyKernel
 
-	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder anykernel-real.sh .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder anykernel-real.sh .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE2"
+	ZIP_FINAL="$ZIPNAME-$DATE"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
