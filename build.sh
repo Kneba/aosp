@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 #
-# Copyright (C) 2023-2024 Kneba <abenkenary3@gmail.com>
+# Copyright (C) 2023-2025 Kneba <abenkenary3@gmail.com>
 #
 
 #
@@ -33,8 +33,8 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-15
-KERNELNAME=TOM
-CODENAME=Nightly
+KERNELNAME=TEST
+CODENAME=CIP
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -45,7 +45,7 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 --recursive https://$USERNAME:$TOKEN@github.com/Tiktodz/android_kernel_asus_sdm660 -b stable-release kernel
-git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.1 kernel
+git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lineage-22.2 kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -222,10 +222,10 @@ function zipping() {
 	#sed -i "s/KVARIANT/$CODENAME/g" aroma-config
 	#cd "$KERNEL_ROOTDIR"/AnyKernel
 
-	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE"
+	ZIP_FINAL="$ZIPNAME-$DATE2"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
