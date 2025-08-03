@@ -33,9 +33,9 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-15
-KERNELNAME=TEST
+KERNELNAME=TOM
 CODENAME=CIP
-BASE=android13-4.19-sdm660
+BASE=android13-4.4-sdm660
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
