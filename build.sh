@@ -45,7 +45,7 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b cip kernel
+git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm636 -b cip kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
