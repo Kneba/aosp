@@ -45,7 +45,7 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 kernel
+git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -53,8 +53,8 @@ rm -rf $ClangPath/*
 mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r536225.tar.gz -O "clang-r536225.tar.gz"
-tar -xf clang-r536225.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
+tar -xf clang-r547379.tar.gz -C $ClangPath
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 #tar -xf clang-r522817.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
@@ -131,11 +131,11 @@ make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
-curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
-make -j$(nproc) O=out ARCH=arm64 vendor/X00TD_defconfig
+make -j$(nproc) O=out ARCH=arm64 vendor/asus/X00TD_defconfig
 make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 LLVM_IAS=1 \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
@@ -220,10 +220,10 @@ function zipping() {
 	#sed -i "s/KVARIANT/$CODENAME/g" aroma-config
 	#cd "$KERNEL_ROOTDIR"/AnyKernel
 
-	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE"
+	ZIP_FINAL="$ZIPNAME-$DATE2"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
