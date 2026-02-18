@@ -159,9 +159,6 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     HOSTCC=${ClangPath}/bin/clang \
     HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a build.log
 
-	BUILD_END=$(date +"%s")
-	DIFF=$(($BUILD_END - $BUILD_START))
-
 if ! [ -f $IMAGE ]; then
      tg_post_build "build.log" "Compile failed!!"
      exit 1
