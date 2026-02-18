@@ -128,7 +128,8 @@ tg_post_msg() {
 
 # Find Error
 function finerr() {
-   if ! [[ -f $KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb]]; then
+   if ! [[ -f $KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb]] \
+   then
         tg_post_build "build.log" "Compile failed!!"
      exit 1
 fi
