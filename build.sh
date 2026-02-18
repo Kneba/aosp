@@ -126,15 +126,6 @@ tg_post_msg() {
     -d text="$1"
 }
 
-# Find Error
-function finerr() {
-   if ! [[ -f $KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb]] \
-   then
-        tg_post_build "build.log" "Compile failed!!"
-     exit 1
-fi
-}
-
 # Speed up build process
 make="./makeparallel"
 # Compiler
@@ -164,13 +155,15 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 LLVM_IAS=1 \
     HOSTCC=${ClangPath}/bin/clang \
     HOSTCXX=${ClangPath}/bin/clang++
 
-   if ! [ -a "$IMAGE" ]; then
-	finerr
-	exit 1
-   fi
+if ! [ -f $IMAGE ]; then
+     tg_post_build "build.log" "Compile failed!!"
+     exit 1
+fi
+
    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
    cp $IMAGE AnyKernel
 }
+
 # Push kernel to telegram
 function push() {
     cd AnyKernel
