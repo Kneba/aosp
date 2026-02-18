@@ -91,7 +91,8 @@ DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
-#sed -i 's/.*CONFIG_LTO_NONE=.*/CONFIG_LTO_NONE=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
+sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
+sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TOM×Shankara-969"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -111,10 +112,10 @@ tg_post_build() {
     MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
 
     #Show the Checksum alongwith caption
-    curl --progress-bar -F document=@"$1" "$BOT_BUILD_URL" \
+    curl -s -F document=@"$1" "$BOT_BUILD_URL" \
     -F chat_id="$2"  \
     -F "disable_web_page_preview=true" \
-    -F "parse_mode=html" \
+    -F "parse_mode=Markdown" \
     -F caption="$3"  
 }
 
@@ -135,7 +136,10 @@ curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
-make -j$(nproc) O=out ARCH=arm64 vendor/X00TD_defconfig 2>&1 | tee -a build.log
+make -j$(nproc) vendor/X00TD_defconfig \
+ARCH=arm64 \
+O=out 2>&1 | tee -a build.log
+
 make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
@@ -154,6 +158,9 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     HOSTAR=${ClangPath}/bin/llvm-ar \
     HOSTCC=${ClangPath}/bin/clang \
     HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a build.log
+
+	BUILD_END=$(date +"%s")
+	DIFF=$(($BUILD_END - $BUILD_START))
 
 if ! [ -f $IMAGE ]; then
      tg_post_build "build.log" "Compile failed!!"
