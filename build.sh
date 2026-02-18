@@ -32,10 +32,10 @@ GCCaPath="${MainPath}/GCC64"
 GCCbPath="${MainPath}/GCC32"
 
 # Identity
-ANDRVER=11-15
+ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=cip92
-BASE=android13-4.4-sdm660
+CODENAME=TZY
+BASE=android13-4.19-sdm660
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
@@ -97,7 +97,7 @@ START=$(date +"%s")
 command -v java > /dev/null 2>&1
 
 # Check Kernel Version
-KERVER=$(cd $KERNEL_ROOTDIR; curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master && make kernelversion)
+KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
 ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
@@ -125,11 +125,21 @@ tg_post_msg() {
     -d "parse_mode=html" \
     -d text="$1"
 }
+
+# Find Error
+function finerr() {
+   if ! [[ -f $KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb]]; then
+        tg_post_build "build.log" "Compile failed!!"
+     exit 1
+fi
+}
+
 # Speed up build process
 make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
+curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
@@ -182,15 +192,7 @@ function push() {
         <b>🆑 Changelog: </b>
         - <code>$COMMIT_HEAD</code>"
 }
-# Find Error
-function finerr() {
-    curl -s -X POST "$BOT_MSG_URL" \
-        -d chat_id="$TG_CHAT_ID" \
-        -d "disable_web_page_preview=true" \
-        -d "parse_mode=markdown" \
-        -d text="❌ Tetap menyerah...Pasti bisa!!!"
-    exit 1
-}
+
 # Zipping
 function zipping() {
 	cd AnyKernel || exit 1
