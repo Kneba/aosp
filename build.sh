@@ -193,11 +193,11 @@ function push() {
 
 # Find Error
 function finerr() {
-    curl -F document=@"build.log" "$BOT_BUILD_URL" \
+    curl -s -X POST "$BOT_MSG_URL" \
         -d chat_id="$TG_CHAT_ID" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=markdown" \
-        -d text="❌ Tetap menyerah...Pasti bisa!!!"
+        -d text="❌ "build.log" Tetap menyerah...Pasti bisa!!!"
     exit 1
 }
 
