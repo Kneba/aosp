@@ -34,7 +34,7 @@ GCCbPath="${MainPath}/GCC32"
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=LAG
+CODENAME=PELT
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -45,7 +45,7 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
+git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b pelt kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -197,7 +197,7 @@ function finerr() {
         -d chat_id="$TG_CHAT_ID" \
         -d "disable_web_page_preview=true" \
         -d "parse_mode=markdown" \
-        -d text="❌ "build.log" Tetap menyerah...Pasti bisa!!!"
+        -d text="❌ Tetap menyerah...Pasti bisa!!!"
     exit 1
 }
 
