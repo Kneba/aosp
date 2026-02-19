@@ -53,8 +53,8 @@ rm -rf $ClangPath/*
 mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
-tar -xf clang-r574158.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
+tar -xf clang-r547379.tar.gz -C $ClangPath
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 #tar -xf clang-r522817.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
