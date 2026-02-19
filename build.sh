@@ -159,10 +159,10 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     HOSTCC=${ClangPath}/bin/clang \
     HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a build.log
 
-if ! [ -f $IMAGE ]; then
-     tg_post_build "build.log" "Compile failed!!"
-     exit 1
-fi
+   if ! [ -a "$IMAGE" ]; then
+	finerr
+	exit 1
+   fi
 
    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
    cp $IMAGE AnyKernel
@@ -189,6 +189,16 @@ function push() {
         - <code>($MANUFACTURERINFO)</code>
         <b>🆑 Changelog: </b>
         - <code>$COMMIT_HEAD</code>"
+}
+
+# Find Error
+function finerr() {
+    curl -F document=@"build.log" "$BOT_BUILD_URL" \
+        -d chat_id="$TG_CHAT_ID" \
+        -d "disable_web_page_preview=true" \
+        -d "parse_mode=markdown" \
+        -d text="❌ Tetap menyerah...Pasti bisa!!!"
+    exit 1
 }
 
 # Zipping
