@@ -90,7 +90,7 @@ DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
-#sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/asus/X00TD_defconfig
+#sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TOM×Shankara-969"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 
@@ -138,7 +138,7 @@ export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
 make -j$(nproc) vendor/X00TD_defconfig \
 ARCH=arm64 \
-O=out 2>&1 | tee -a build.log
+O=out 2>&1 | tee -a error.log
 
 make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
@@ -157,7 +157,7 @@ make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     CLANG_TRIPLE=aarch64-linux-gnu- \
     HOSTAR=${ClangPath}/bin/llvm-ar \
     HOSTCC=${ClangPath}/bin/clang \
-    HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a build.log
+    HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a error.log
 
    if ! [ -a "$IMAGE" ]; then
 	finerr
@@ -176,7 +176,7 @@ function push() {
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
         -F caption="✅<b>Build Done</b>
-        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>
+        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>
         <b>Ⓜ MD5: </b>
         - <code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
@@ -193,12 +193,12 @@ function push() {
 
 # Find Error
 function finerr() {
-    curl -F document=@"build.log" "$BOT_BUILD_URL" \
+    curl -F document=@"error.log" "$BOT_BUILD_URL" \
         -F chat_id="$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=markdown" \
-        -F caption="⛔<b>Build Error</b>
-        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>"
+        -F caption="⛔<b>Build Error!</b>
+        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>"
     exit 1
 }
 
@@ -256,4 +256,5 @@ compile
 zipping
 END=$(date +"%s")
 DIFF=$(($END - $START))
+finerr
 push
