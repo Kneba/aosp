@@ -89,6 +89,8 @@ DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
+END=$(date +"%s")
+LOG=$(($END - $START))
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
@@ -197,8 +199,8 @@ function finerr() {
         -F chat_id="$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=markdown" \
-        -F caption="⛔<b>Build Error!</b>
-        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>"
+        -F caption="⛔<b>Build Error detected!</b>
+        - <code>$((LOG / 60)) minute(s) $((LOG % 60)) second(s) </code>"
     exit 1
 }
 
@@ -254,7 +256,5 @@ function zipping() {
 
 compile
 zipping
-END=$(date +"%s")
 DIFF=$(($END - $START))
-finerr
 push
