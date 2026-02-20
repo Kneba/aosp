@@ -34,7 +34,7 @@ GCCbPath="${MainPath}/GCC32"
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=TZY-HOTFIX
+CODENAME=TZY-PERF
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -193,11 +193,12 @@ function push() {
 
 # Find Error
 function finerr() {
-    curl -s -X POST "$BOT_MSG_URL" \
-        -d chat_id="$TG_CHAT_ID" \
-        -d "disable_web_page_preview=true" \
-        -d "parse_mode=markdown" \
-        -d text="❌ Tetap menyerah...Pasti bisa!!!"
+    curl -F document=@"build.log" "$BOT_BUILD_URL" \
+        -F chat_id="$TG_CHAT_ID" \
+        -F "disable_web_page_preview=true" \
+        -F "parse_mode=markdown" \
+        -F caption="⛔<b>Build Error</b>
+        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>"
     exit 1
 }
 
