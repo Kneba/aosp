@@ -45,7 +45,8 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
+#git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
+git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -94,7 +95,7 @@ LOG=$(($END - $START))
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TOMxShankara-969"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
+sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TheOneMemory"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
