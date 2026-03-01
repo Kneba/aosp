@@ -34,7 +34,7 @@ GCCbPath="${MainPath}/GCC32"
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=Perf
+CODENAME=TZY
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -45,8 +45,8 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-#git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
-git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
+git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
+#git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -95,7 +95,7 @@ LOG=$(($END - $START))
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TheOneMemory"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
+sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TOMTZY-969"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -135,7 +135,7 @@ make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
-curl -LSs "https://raw.githubusercontent.com/backslashxx/KernelSU/master/kernel/setup.sh" | bash -s master
+curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
 msg "|| Compile starting ||"
@@ -238,10 +238,10 @@ function zipping() {
 	#sed -i "s/KVARIANT/$CODENAME/g" aroma-config
 	#cd "$KERNEL_ROOTDIR"/AnyKernel
 
-	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE"
+	ZIP_FINAL="$ZIPNAME-$DATE2"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
