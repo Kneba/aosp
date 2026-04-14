@@ -1,4 +1,5 @@
 #!/usr/bin/env bash
+
 #
 # Copyright (C) 2023-2025 Kneba <abenkenary3@gmail.com>
 #
@@ -33,8 +34,8 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=TOM
-CODENAME=TZY
+KERNELNAME=BCA
+CODENAME=TYTYD
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -46,7 +47,8 @@ echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
-git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
+#git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
+git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -60,7 +62,7 @@ msg "|| Cloning AOSP Clang ||"
 ## clang 20 ##
 wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
 tar -xf clang-r547379.tar.gz -C $ClangPath
-=========########=========
+
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 #tar -xf clang-r522817.tar.gz -C $ClangPath
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
@@ -97,8 +99,8 @@ DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-TOMTZY-969"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
+sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -138,11 +140,13 @@ make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
-#curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
+
 msg "|| Compile starting ||"
-make -j$(nproc) vendor/X00TD_defconfig \
+make -j$(nproc) vendor/asus/X00TD_defconfig \
 ARCH=arm64 \
 O=out 2>&1 | tee -a error.log
 
