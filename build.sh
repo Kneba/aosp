@@ -35,7 +35,7 @@ GCCbPath="${MainPath}/GCC32"
 # Identity
 ANDRVER=11-16
 KERNELNAME=BCA
-CODENAME=TYTYD
+CODENAME=TYTYD-CAMERA
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -48,7 +48,7 @@ msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
-git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 kernel
+git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -100,7 +100,8 @@ START=$(date +"%s")
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+#sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+sed -i 's|-DerHorizont-Legacy|perf+|g' localversion
 
 # Java
 command -v java > /dev/null 2>&1
