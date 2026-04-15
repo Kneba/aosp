@@ -34,8 +34,8 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=BCA
-CODENAME=TYTYD-CAMERA
+KERNELNAME=TOM
+CODENAME=TYTYD
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -46,9 +46,9 @@ DEVICE=X00TD
 echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-#git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b lag kernel
+git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
-git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
+#git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -59,9 +59,12 @@ msg "|| Cloning AOSP Clang ||"
 ## clang 22 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
 #tar -xf clang-r584948.tar.gz -C $ClangPath
+## clang 21 ##
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
+tar -xf clang-r563880c.tar.gz -C $ClangPath
 ## clang 20 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
-tar -xf clang-r547379.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
+#tar -xf clang-r547379.tar.gz -C $ClangPath
 
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 #tar -xf clang-r522817.tar.gz -C $ClangPath
@@ -101,7 +104,7 @@ START=$(date +"%s")
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
 sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 #sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-sed -i 's|-DerHorizont-Legacy|perf+|g' localversion
+#sed -i 's|-DerHorizont-Legacy|-perf+|g' $KERNEL_ROOTDIR/localversion
 
 # Java
 command -v java > /dev/null 2>&1
@@ -138,10 +141,12 @@ tg_post_msg() {
 
 # Speed up build process
 make="./makeparallel"
+
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
-curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+#curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
+curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
@@ -150,7 +155,6 @@ msg "|| Compile starting ||"
 make -j$(nproc) vendor/asus/X00TD_defconfig \
 ARCH=arm64 \
 O=out 2>&1 | tee -a error.log
-
 make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
     LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
     PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
