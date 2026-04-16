@@ -63,11 +63,14 @@ msg "|| Cloning AOSP Clang ||"
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
 #tar -xf clang-r563880c.tar.gz -C $ClangPath
 ## clang 20 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
-tar -xf clang-r547379.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
+#tar -xf clang-r547379.tar.gz -C $ClangPath
+git clone --depth=1 https://gitlab.com/kei-space/clang/r547379 $ClangPath
 
+## clang 18 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
 #tar -xf clang-r522817.tar.gz -C $ClangPath
+
 #wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
