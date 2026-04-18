@@ -34,8 +34,8 @@ GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=RATIBOR
-CODENAME=BASED
+KERNELNAME=Ratibor
+CODENAME=LTS
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
@@ -49,7 +49,7 @@ msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 #git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
-git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b 16 --single-branch kernel
+git clone --depth=1 https://github.com/SonicBSV/android_kernel_asus_sdm660-4.19 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -78,15 +78,15 @@ tar -xf clang-r563880c.tar.gz -C $ClangPath
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
 # Clone GCC
-rm -rf $GCCaPath/*
-rm -rf $GCCbPath/*
-mkdir $GCCaPath
-mkdir $GCCbPath
-msg "|| Cloning AOSP GCC ||"
-wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc64.tar.gz"
-tar -xf gcc64.tar.gz -C $GCCaPath
-wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc32.tar.gz"
-tar -xf gcc32.tar.gz -C $GCCbPath
+#rm -rf $GCCaPath/*
+#rm -rf $GCCbPath/*
+#mkdir $GCCaPath
+#mkdir $GCCbPath
+#msg "|| Cloning AOSP GCC ||"
+#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc64.tar.gz"
+#tar -xf gcc64.tar.gz -C $GCCaPath
+#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc32.tar.gz"
+#tar -xf gcc32.tar.gz -C $GCCbPath
 
 ##------------------------------------------------------##
 ##---------Do Not Touch Anything Beyond This------------##
@@ -152,7 +152,7 @@ make="./makeparallel"
 compile(){
 cd ${KERNEL_ROOTDIR}
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
-curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
+#curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
@@ -161,23 +161,12 @@ msg "|| Compile starting ||"
 make -j$(nproc) vendor/asus/X00TD_defconfig \
 ARCH=arm64 \
 O=out 2>&1 | tee -a error.log
-make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
-    LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
-    PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
-    CC=${ClangPath}/bin/clang \
-    NM=${ClangPath}/bin/llvm-nm \
-    CXX=${ClangPath}/bin/clang++ \
-    AR=${ClangPath}/bin/llvm-ar \
-    STRIP=${ClangPath}/bin/llvm-strip \
-    OBJCOPY=${ClangPath}/bin/llvm-objcopy \
-    OBJDUMP=${ClangPath}/bin/llvm-objdump \
-    OBJSIZE=${ClangPath}/bin/llvm-size \
-    READELF=${ClangPath}/bin/llvm-readelf \
+make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
+    PATH=$ClangPath/bin:${PATH} \
+    LLVM=1 \
+    LLVM_IAS=1 \
     CROSS_COMPILE=aarch64-linux-android- \
     CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-    CLANG_TRIPLE=aarch64-linux-gnu- \
-    HOSTAR=${ClangPath}/bin/llvm-ar \
-    HOSTCC=${ClangPath}/bin/clang \
     HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a error.log
 
    if ! [ -a "$IMAGE" ]; then
