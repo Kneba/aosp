@@ -156,18 +156,17 @@ cd ${KERNEL_ROOTDIR}
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
+export PATH=$ClangPath/bin:${PATH}
 
 msg "|| Compile starting ||"
 make -j$(nproc) vendor/asus/X00TD_defconfig \
 ARCH=arm64 \
 O=out 2>&1 | tee -a error.log
 make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
-    PATH=$ClangPath/bin:${PATH} \
     LLVM=1 \
     LLVM_IAS=1 \
     CROSS_COMPILE=aarch64-linux-android- \
-    CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-    HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a error.log
+    CROSS_COMPILE_ARM32=arm-linux-androideabi- 2>&1 | tee -a error.log
 
    if ! [ -a "$IMAGE" ]; then
 	finerr
