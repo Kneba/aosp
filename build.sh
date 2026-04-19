@@ -49,7 +49,7 @@ msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 #git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
-git clone https://github.com/sotodrom/kernel_asus_sdm660-4.19 --single-branch kernel
+git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -101,14 +101,14 @@ export KBUILD_BUILD_HOST=$(cat /etc/hostname) # Change with your own host name o
 IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb
 CLANG_VER="$("$ClangPath"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
-export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
+export KBUILD_COMPILER_STRING="$CLANG_VER"
 DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+#sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 #sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 #sed -i 's|-DerHorizont-Legacy|-perf+|g' $KERNEL_ROOTDIR/localversion
 
@@ -151,17 +151,13 @@ make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
-git config --global user.email "Kneba@users.noreply.github"
-git config --global user.name "Kneba"
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
-git reset --merge 1ef62c36c4c16540854597c556995e58df0304b7
-git reset --hard HEAD~1
-git cherry-pick fa268ffb023183ec819f2fb0c657d8ffa844bd88 --no-edit
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
-export PATH=$ClangPath/bin:${PATH}
+export PATH="$ClangPath/bin:${PATH}"
+export LD_LIBRARY_PATH="$ClangPath/lib"
 
 msg "|| Compile starting ||"
 make -j$(nproc) vendor/asus/X00TD_defconfig \
@@ -170,8 +166,7 @@ O=out 2>&1 | tee -a error.log
 make -j$(nproc) ARCH=arm64 SUBARCH=arm64 O=out \
     LLVM=1 \
     LLVM_IAS=1 \
-    CROSS_COMPILE=aarch64-linux-android- \
-    CROSS_COMPILE_ARM32=arm-linux-androideabi- 2>&1 | tee -a error.log
+	CC="$ClangPath/bin/clang" 2>&1 | tee -a error.log
 
    if ! [ -a "$IMAGE" ]; then
 	finerr
