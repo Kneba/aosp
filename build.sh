@@ -49,7 +49,7 @@ msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 #git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
-git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 --single-branch kernel
+git clone https://github.com/sotodrom/kernel_asus_sdm660-4.19 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -153,6 +153,9 @@ compile(){
 cd ${KERNEL_ROOTDIR}
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
+git reset --merge 1ef62c36c4c16540854597c556995e58df0304b7
+git reset --hard HEAD~1
+git cherry-pick fa268ffb023183ec819f2fb0c657d8ffa844bd88 --no-edit
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
