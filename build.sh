@@ -49,7 +49,7 @@ msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 #git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 #git clone --depth=1 https://github.com/rsuntk/android_kernel_asus_sdm660-4.19 -b cam-legacy/lineage-23.2 kernel
-git clone --depth=1 https://github.com/SonicBSV/android_kernel_asus_sdm660-4.19 --single-branch kernel
+git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -58,8 +58,8 @@ mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 ## clang 22 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
-#tar -xf clang-r584948.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
+tar -xf clang-r584948.tar.gz -C $ClangPath
 
 ## clang 21 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
@@ -68,7 +68,7 @@ msg "|| Cloning AOSP Clang ||"
 ## clang 20 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
 #tar -xf clang-r547379.tar.gz -C $ClangPath
-git clone --depth=1 https://gitlab.com/kei-space/clang/r547379 $ClangPath
+#git clone --depth=1 https://gitlab.com/kei-space/clang/r547379 $ClangPath
 
 ## clang 18 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
@@ -152,8 +152,7 @@ make="./makeparallel"
 compile(){
 cd ${KERNEL_ROOTDIR}
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
-#curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
-git reset --hard HEAD^
+curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
