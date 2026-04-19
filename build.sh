@@ -151,6 +151,8 @@ make="./makeparallel"
 # Compiler
 compile(){
 cd ${KERNEL_ROOTDIR}
+git config --global user.email "Kneba@users.noreply.github"
+git config --global user.name "Kneba"
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 git reset --merge 1ef62c36c4c16540854597c556995e58df0304b7
@@ -205,12 +207,11 @@ function push() {
 
 # Find Error
 function finerr() {
-    curl -F document=@"error.log" "$BOT_BUILD_URL" \
-        -F chat_id="$TG_CHAT_ID" \
+    curl -F document=@error.log "$BOT_BUILD_URL" \
+        -F "chat_id=$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
-        -F "parse_mode=markdown" \
-        -F caption="<b>⛔Build Error detected!</b>
-        - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>"
+        -F "parse_mode=html" \
+        -F "caption=<b>⛔ Build Error detected!</b> - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)</code>"
     exit 1
 }
 
