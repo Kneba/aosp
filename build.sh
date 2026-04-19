@@ -153,6 +153,7 @@ compile(){
 cd ${KERNEL_ROOTDIR}
 #curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
 #curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
+git reset --hard HEAD^
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
