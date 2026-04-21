@@ -57,11 +57,11 @@ mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 ## clang 22 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
-#tar -xf clang-r584948.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
+tar -xf clang-r584948.tar.gz -C $ClangPath
 ## clang 21 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
-tar -xf clang-r563880c.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
+#tar -xf clang-r563880c.tar.gz -C $ClangPath
 ## clang 20 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
 #tar -xf clang-r547379.tar.gz -C $ClangPath
