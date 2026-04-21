@@ -62,7 +62,7 @@ msg "|| Cloning AOSP Clang ||"
 #tar -xf clang-r596125.tar.gz -C $ClangPath
 
 ## clang 21 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/ebcc6c3bef363bc539ea39f45b6abae1dce6ff1a/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/ebcc6c3bef363bc539ea39f45b6abae1dce6ff1a/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
 tar -xf clang-r574158.tar.gz -C $ClangPath
 
 ## clang 20 ##
