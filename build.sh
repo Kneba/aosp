@@ -244,10 +244,10 @@ function zipping() {
 	#sed -i "s/KVARIANT/$CODENAME/g" aroma-config
 	#cd "$KERNEL_ROOTDIR"/AnyKernel
 
-	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE2"
+	ZIP_FINAL="$ZIPNAME-$DATE"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
