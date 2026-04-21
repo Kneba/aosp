@@ -47,7 +47,6 @@ echo " "
 msg "|| Cloning Kernel Source ||"
 #git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
 #git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
-#git clone --depth=1 https://github.com/Teamhackneyed/android_kernel_asus_sdm660 -b lineage-22.2 --single-branch kernel
 git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b 16 --single-branch kernel
 
 # Clone AOSP Clang
@@ -57,11 +56,15 @@ mkdir $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 ## clang 22 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
-tar -xf clang-r584948.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
+#tar -xf clang-r584948.tar.gz -C $ClangPath
+#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f60b8b55282f002f594f452ce22dfd6cf1fd7e3c/clang-r596125.tar.gz -O "clang-r596125.tar.gz"
+#tar -xf clang-r596125.tar.gz -C $ClangPath
+
 ## clang 21 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r563880c.tar.gz -O "clang-r563880c.tar.gz"
-#tar -xf clang-r563880c.tar.gz -C $ClangPath
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+/ebcc6c3bef363bc539ea39f45b6abae1dce6ff1a/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
+tar -xf clang-r574158.tar.gz -C $ClangPath
+
 ## clang 20 ##
 #wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
 #tar -xf clang-r547379.tar.gz -C $ClangPath
@@ -75,15 +78,15 @@ tar -xf clang-r584948.tar.gz -C $ClangPath
 #tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
 
 # Clone GCC
-rm -rf $GCCaPath/*
-rm -rf $GCCbPath/*
-mkdir $GCCaPath
-mkdir $GCCbPath
-msg "|| Cloning AOSP GCC ||"
-wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc64.tar.gz"
-tar -xf gcc64.tar.gz -C $GCCaPath
-wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc32.tar.gz"
-tar -xf gcc32.tar.gz -C $GCCbPath
+#rm -rf $GCCaPath/*
+#rm -rf $GCCbPath/*
+#mkdir $GCCaPath
+#mkdir $GCCbPath
+#msg "|| Cloning AOSP GCC ||"
+#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc64.tar.gz"
+#tar -xf gcc64.tar.gz -C $GCCaPath
+#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc32.tar.gz"
+#tar -xf gcc32.tar.gz -C $GCCbPath
 
 ##------------------------------------------------------##
 ##---------Do Not Touch Anything Beyond This------------##
@@ -153,29 +156,18 @@ curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kern
 
 export HASH_HEAD=$(git rev-parse --short HEAD)
 export COMMIT_HEAD=$(git log --oneline -1)
+export PATH="${ClangPath}/bin:$PATH"
+export LD_LIBRARY_PATH="${ClangPath}/lib"
+export LLVM_IAS=1
+export LLVM=1
 
 msg "|| Compile starting ||"
 make -j$(nproc) vendor/asus/X00TD_defconfig \
 ARCH=arm64 \
 O=out 2>&1 | tee -a error.log
-make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out LLVM=1 \
-    LD_LIBRARY_PATH="${ClangPath}/lib64:${LD_LIBRARY_PATH}" \
-    PATH=$ClangPath/bin:$GCCaPath/bin:$GCCbPath/bin:/usr/bin:${PATH} \
-    CC=${ClangPath}/bin/clang \
-    NM=${ClangPath}/bin/llvm-nm \
-    CXX=${ClangPath}/bin/clang++ \
-    AR=${ClangPath}/bin/llvm-ar \
-    STRIP=${ClangPath}/bin/llvm-strip \
-    OBJCOPY=${ClangPath}/bin/llvm-objcopy \
-    OBJDUMP=${ClangPath}/bin/llvm-objdump \
-    OBJSIZE=${ClangPath}/bin/llvm-size \
-    READELF=${ClangPath}/bin/llvm-readelf \
-    CROSS_COMPILE=aarch64-linux-android- \
-    CROSS_COMPILE_ARM32=arm-linux-androideabi- \
-    CLANG_TRIPLE=aarch64-linux-gnu- \
-    HOSTAR=${ClangPath}/bin/llvm-ar \
-    HOSTCC=${ClangPath}/bin/clang \
-    HOSTCXX=${ClangPath}/bin/clang++ 2>&1 | tee -a error.log
+make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out \
+    LLVM=1 \
+    CC=${ClangPath}/bin/clang 2>&1 | tee -a error.log
 
    if ! [ -a "$IMAGE" ]; then
 	finerr
