@@ -26,8 +26,8 @@ ClangPath="${MainPath}/clang"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=AfterlifeOS
-CODENAME=Ophelia
+KERNELNAME=perf
+CODENAME=plus
 BASE=android13-4.19-sdm660
 
 # Build dtbo.img (1 = Yes, 0 = No)
@@ -154,16 +154,16 @@ function push() {
         - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>
         <b>Ⓜ MD5: </b>
         - <code>$MD5CHECK</code>"
-#        <b>📅 Build Date: </b>
-#        - <code>$DATE</code>
-#        <b>🐧 Linux Version: </b>
-#        - <code>$KERVER</code>
-#        <b>💿 Compiler: </b>
-#        - <code>$KBUILD_COMPILER_STRING</code>
-#        <b>📱 Device: </b>
-#        - <code>($MANUFACTURERINFO $DEVICE)</code>
-#        <b>🆑 Changelog: </b>
-#        - <code>$COMMIT_HEAD</code>"
+        <b>📅 Build Date: </b>
+        - <code>$DATE</code>
+        <b>🐧 Linux Version: </b>
+        - <code>$KERVER</code>
+        <b>💿 Compiler: </b>
+        - <code>$KBUILD_COMPILER_STRING</code>
+        <b>📱 Device: </b>
+        - <code>($MANUFACTURERINFO $DEVICE)</code>
+        <b>🆑 Changelog: </b>
+        - <code>$COMMIT_HEAD</code>"
 }
 
 # Find Error
