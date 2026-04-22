@@ -153,7 +153,7 @@ function push() {
         -F caption="✅<b>Build Done</b>
         - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s) </code>
         <b>Ⓜ MD5: </b>
-        - <code>$MD5CHECK</code>"
+        - <code>$MD5CHECK</code>
         <b>📅 Build Date: </b>
         - <code>$DATE</code>
         <b>🐧 Linux Version: </b>
