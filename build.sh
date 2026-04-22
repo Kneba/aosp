@@ -35,7 +35,7 @@ GCCbPath="${MainPath}/GCC32"
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=PERF
+CODENAME=PERF-OTG
 BASE=android13-4.19-sdm660
 
 # Show manufacturer info
