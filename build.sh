@@ -1,14 +1,8 @@
 #!/usr/bin/env bash
 
 #
-# Copyright (C) 2023-2025 Kneba <abenkenary3@gmail.com>
+# Copyright (C) 2023-2026 Kneba <abenkenary3@gmail.com>
 #
-
-#
-# Function to show an informational message
-#
-
-#set -e
 
 msg() {
     echo -e "\e[1;32m$*\e[0m"
@@ -29,14 +23,15 @@ cdir() {
 # Main
 MainPath="$(pwd)"
 ClangPath="${MainPath}/clang"
-GCCaPath="${MainPath}/GCC64"
-GCCbPath="${MainPath}/GCC32"
 
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
 CODENAME=PERF-OTG
 BASE=android13-4.19-sdm660
+
+# Build dtbo.img (1 = Yes, 0 = No)
+INCLUDE_DTBO=0
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
@@ -45,60 +40,28 @@ DEVICE=X00TD
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-#git clone --depth=1 https://$USERNAME:$TOKEN@github.com/sotodrom/kernel_asus_sdm660 -b wip kernel
-#git clone --depth=1 https://github.com/Tiktodz/android_kernel_asus_sdm660 -b 16 --single-branch kernel
 git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b 16 --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
 rm -rf $ClangPath/*
-mkdir $ClangPath
+mkdir -p $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
-## clang 22 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/mirror-goog-main-llvm-toolchain-source/clang-r584948.tar.gz -O "clang-r584948.tar.gz"
-#tar -xf clang-r584948.tar.gz -C $ClangPath
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f60b8b55282f002f594f452ce22dfd6cf1fd7e3c/clang-r596125.tar.gz -O "clang-r596125.tar.gz"
-#tar -xf clang-r596125.tar.gz -C $ClangPath
-
 ## clang 21 ##
 wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/ebcc6c3bef363bc539ea39f45b6abae1dce6ff1a/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
 tar -xf clang-r574158.tar.gz -C $ClangPath
-
-## clang 20 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r547379.tar.gz -O "clang-r547379.tar.gz"
-#tar -xf clang-r547379.tar.gz -C $ClangPath
-#git clone --depth=1 https://gitlab.com/kei-space/clang/r547379 $ClangPath
-
-## clang 18 ##
-#wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/refs/heads/main/clang-r522817.tar.gz -O "clang-r522817.tar.gz"
-#tar -xf clang-r522817.tar.gz -C $ClangPath
-
-#wget -q https://github.com/ftrsndrya/ElectroWizard-Clang/releases/download/ElectroWizard-Clang-19.0.0-release/ElectroWizard-Clang-19.0.0.tar.gz -O "ElectroWizard-Clang-19.0.0.tar.gz"
-#tar -xf ElectroWizard-Clang-19.0.0.tar.gz -C $ClangPath
-
-# Clone GCC
-#rm -rf $GCCaPath/*
-#rm -rf $GCCbPath/*
-#mkdir $GCCaPath
-#mkdir $GCCbPath
-#msg "|| Cloning AOSP GCC ||"
-#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/aarch64/aarch64-linux-android-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc64.tar.gz"
-#tar -xf gcc64.tar.gz -C $GCCaPath
-#wget -q https://android.googlesource.com/platform/prebuilts/gcc/linux-x86/arm/arm-linux-androideabi-4.9/+archive/refs/tags/android-12.1.0_r27.tar.gz -O "gcc32.tar.gz"
-#tar -xf gcc32.tar.gz -C $GCCbPath
 
 ##------------------------------------------------------##
 ##---------Do Not Touch Anything Beyond This------------##
 
 # Prepared
-KERNEL_ROOTDIR=$(pwd)/kernel # IMPORTANT ! Fill with your kernel source root directory.
-#export LD=ld.lld
-#export HOSTLD=ld.lld
-#export CCACHE=1
-export KBUILD_BUILD_USER=queen # Change with your own name or else.
-export KBUILD_BUILD_HOST=$(cat /etc/hostname) # Change with your own host name or else.
+KERNEL_ROOTDIR=$(pwd)/kernel 
+export KBUILD_BUILD_USER="queen" 
+export KBUILD_BUILD_HOST=$(cat /etc/hostname) 
 IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/Image.gz-dtb
+DTBO_IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/dtbo.img
+
 CLANG_VER="$("$ClangPath"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
 export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
@@ -107,10 +70,7 @@ DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
-#sed -i 's/.*# CONFIG_LTO_CLANG.*/CONFIG_LTO_CLANG=y/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/X00TD_defconfig
-sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-#sed -i 's/CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION="-perf+"/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-#sed -i 's|-DerHorizont-Legacy|-perf+|g' $KERNEL_ROOTDIR/localversion
+#sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -121,21 +81,9 @@ KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 # The name of the Kernel, to name the ZIP
 ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
 
-# Telegram
+# Telegram API
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
 export BOT_BUILD_URL="https://api.telegram.org/bot$TG_TOKEN/sendDocument"
-
-tg_post_build() {
-    #Post MD5Checksum alongwith for easeness
-    MD5CHECK=$(md5sum "$1" | cut -d' ' -f1)
-
-    #Show the Checksum alongwith caption
-    curl -s -F document=@"$1" "$BOT_BUILD_URL" \
-    -F chat_id="$2"  \
-    -F "disable_web_page_preview=true" \
-    -F "parse_mode=Markdown" \
-    -F caption="$3"  
-}
 
 # Telegram messaging
 tg_post_msg() {
@@ -145,42 +93,59 @@ tg_post_msg() {
     -d text="$1"
 }
 
-# Speed up build process
-make="./makeparallel"
-
 # Compiler
 compile(){
-cd ${KERNEL_ROOTDIR}
-#curl -LSs "https://raw.githubusercontent.com/rsuntk/KernelSU/main/kernel/setup.sh" | bash -s main
-curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
+    cd ${KERNEL_ROOTDIR}
+    curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 
-export HASH_HEAD=$(git rev-parse --short HEAD)
-export COMMIT_HEAD=$(git log --oneline -1)
-export PATH="${ClangPath}/bin:$PATH"
-export LD_LIBRARY_PATH="${ClangPath}/lib"
-export LLVM_IAS=1
-export LLVM=1
+    export HASH_HEAD=$(git rev-parse --short HEAD)
+    export COMMIT_HEAD=$(git log --oneline -1)
+    export PATH="${ClangPath}/bin:$PATH"
+    export LD_LIBRARY_PATH="${ClangPath}/lib"
+    export LLVM_IAS=1
+    export LLVM=1
 
-msg "|| Compile starting ||"
-make -j$(nproc) vendor/asus/X00TD_defconfig \
-ARCH=arm64 \
-O=out 2>&1 | tee -a error.log
-make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out \
-    LLVM=1 \
-    CC=${ClangPath}/bin/clang 2>&1 | tee -a error.log
+    msg "|| Compile starting ||"
+    tg_post_msg "<b>🚀 Compile Started:</b> <code>$KERNELNAME</code> for <code>$DEVICE</code>\n<b>⚙️ Compiler:</b> <code>$CLANG_VER</code>"
 
-   if ! [ -a "$IMAGE" ]; then
-	finerr
-	exit 1
-   fi
+    rm -f error.log
+    make -j$(nproc) vendor/asus/X00TD_defconfig \
+    ARCH=arm64 \
+    O=out 2>&1 | tee -a error.log
+    
+    make -j$(nproc) ARCH=arm64 SUBARCH=ARM64 O=out \
+        LLVM=1 \
+        CC=${ClangPath}/bin/clang 2>&1 | tee -a error.log
 
-   git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
-   cp $IMAGE AnyKernel
+    if ! [ -a "$IMAGE" ]; then
+        finerr
+        exit 1
+    fi
+
+cd "$KERNEL_ROOTDIR"
+    rm -rf AnyKernel
+    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
+    
+    cp $IMAGE AnyKernel/
+    
+    # Optional Logic for DTBO
+    if [ "$INCLUDE_DTBO" -eq 1 ]; then
+        msg "|| Include dtbo.img in the zip... ||"
+        if [ -f "$DTBO_IMAGE" ]; then
+            cp "$DTBO_IMAGE" AnyKernel/
+        elif [ -f "$KERNEL_ROOTDIR/out/dtbo.img" ]; then
+            cp "$KERNEL_ROOTDIR/out/dtbo.img" AnyKernel/
+        else
+            err "Warning: INCLUDE_DTBO=1, but dtbo.img file not found!"
+        fi
+    else
+        msg "|| Skipping dtbo.img (INCLUDE_DTBO=0) ||"
+    fi
 }
 
 # Push kernel to telegram
 function push() {
-    cd AnyKernel
+    cd "$KERNEL_ROOTDIR"/AnyKernel
     curl -F document=@"$ZIP_FINAL.zip" "$BOT_BUILD_URL" \
         -F chat_id="$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
@@ -193,10 +158,10 @@ function push() {
         - <code>$DATE</code>
         <b>🐧 Linux Version: </b>
         - <code>$KERVER</code>
-         <b>💿 Compiler: </b>
+        <b>💿 Compiler: </b>
         - <code>$KBUILD_COMPILER_STRING</code>
         <b>📱 Device: </b>
-        - <code>($MANUFACTURERINFO)</code>
+        - <code>($MANUFACTURERINFO $DEVICE)</code>
         <b>🆑 Changelog: </b>
         - <code>$COMMIT_HEAD</code>"
 }
@@ -207,44 +172,14 @@ function finerr() {
         -F "chat_id=$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
-        -F "caption=<b>⛔Build Error detected!</b> - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>"
+        -F "caption=<b>⛔ Build Error detected!</b> - <code>$((DIFF / 60)) minute(s) $((DIFF % 60)) second(s)... </code>"
     exit 1
 }
 
 # Zipping
 function zipping() {
-	cd AnyKernel || exit 1
-	#cp -af "$KERNEL_ROOTDIR"/changelog "$KERNEL_ROOTDIR"/AnyKernel/META-INF/com/google/android/aroma/changelog.txt
-	#mv -f anykernel-real.sh anykernel.sh
-	#sed -i "s/kernel.string=.*/kernel.string=$KERNELNAME/g" anykernel.sh
-	#sed -i "s/kernel.type=.*/kernel.type=Stock-OverClock/g" anykernel.sh
-	#sed -i "s/kernel.for=.*/kernel.for=$DEVICE/g" anykernel.sh
-	#sed -i "s/kernel.compiler=.*/kernel.compiler=$KBUILD_COMPILER_STRING/g" anykernel.sh
-	#sed -i "s/kernel.made=.*/kernel.made=$KBUILD_BUILD_USER/g" anykernel.sh
-	#sed -i "s/kernel.version=.*/kernel.version=$KERVER/g" anykernel.sh
-	#sed -i "s/message.word=.*/message.word=Appreciate your efforts for choosing TheOneMemory kernel./g" anykernel.sh
-	#sed -i "s/build.date=.*/build.date=$DATE3/g" anykernel.sh
-	#sed -i "s/build.type=.*/build.type=$CODENAME/g" anykernel.sh
-	#sed -i "s/supported.versions=.*/supported.versions=$ANDRVER/g" anykernel.sh
-	#sed -i "s/device.name1=.*/device.name1=X00TD/g" anykernel.sh
-	#sed -i "s/device.name2=.*/device.name2=X00T/g" anykernel.sh
-	#sed -i "s/device.name3=.*/device.name3=Zenfone Max Pro M1 (X00TD)/g" anykernel.sh
-	#sed -i "s/device.name4=.*/device.name4=ASUS_X00TD/g" anykernel.sh
-	#sed -i "s/device.name5=.*/device.name5=ASUS_X00T/g" anykernel.sh
-	#sed -i "s/X00TD=.*/X00TD=1/g" anykernel.sh
-
-	#cd "$KERNEL_ROOTDIR"/AnyKernel/META-INF/com/google/android
-	#mv -f update-binary update-binary-installer
-	#mv -f aroma-binary update-binary
-	#sed -i "s/KNAME/$KERNELNAME/g" aroma-config
-	#sed -i "s/KVER/$KERVER/g" aroma-config
-	#sed -i "s/KAUTHOR/$KBUILD_BUILD_USER/g" aroma-config
-	#sed -i "s/KDEVICE/Zenfone Max Pro M1/g" aroma-config
-	#sed -i "s/KBDATE/$DATE3/g" aroma-config
-	#sed -i "s/KVARIANT/$CODENAME/g" aroma-config
-	#cd "$KERNEL_ROOTDIR"/AnyKernel
-
-	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore  zipsigner* *.zip
+	cd "$KERNEL_ROOTDIR"/AnyKernel || exit 1
+	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore zipsigner* *.zip
  
 	## Prepare a final zip variable
 	ZIP_FINAL="$ZIPNAME-$DATE"
@@ -258,7 +193,6 @@ function zipping() {
 	ZIP_FINAL="$ZIP_FINAL-signed"
  	mv kernel-signed.zip $ZIP_FINAL.zip
 	MD5CHECK=$(md5sum "$ZIP_FINAL.zip" | cut -d' ' -f1)
-	cd ..
 }
 
 compile
