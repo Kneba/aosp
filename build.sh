@@ -27,7 +27,7 @@ ClangPath="${MainPath}/clang"
 # Identity
 ANDRVER=11-16
 KERNELNAME=perf
-CODENAME=plus
+CODENAME=plus-fcc
 BASE=android13-4.19-sdm660
 
 # Build dtbo.img (1 = Yes, 0 = No)
@@ -64,7 +64,7 @@ DTBO_IMAGE=$KERNEL_ROOTDIR/out/arch/arm64/boot/dtbo.img
 
 CLANG_VER="$("$ClangPath"/bin/clang --version | head -n 1 | perl -pe 's/\(http.*?\)//gs' | sed -e 's/  */ /g' -e 's/[[:space:]]*$//')"
 LLD_VER="$("$ClangPath"/bin/ld.lld --version | head -n 1)"
-export KBUILD_COMPILER_STRING="$CLANG_VER with $LLD_VER"
+export KBUILD_COMPILER_STRING="$CLANG_VER"
 DATE=$(TZ=Asia/Jakarta date +"%d%m%Y")
 DATE2=$(TZ=Asia/Jakarta date +"%d%m%Y-%H%M")
 DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
