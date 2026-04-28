@@ -35,8 +35,8 @@ INCLUDE_DTBO=0
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
-DEVICE=X01BD
-DEFCONFIG=vendor/asus/X01BD_defconfig
+DEVICE=X00TD
+DEFCONFIG=vendor/asus/X00TD_defconfig
 
 # Clone Kernel Source
 echo " "
@@ -80,7 +80,7 @@ command -v java > /dev/null 2>&1
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-$CODENAME-$KERVER"
+ZIPNAME="$KERNELNAME-$CODENAME-$-DEVICE-$KERVER"
 
 # Telegram API
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
@@ -107,7 +107,7 @@ compile(){
     export LLVM=1
 
     msg "|| Compile starting ||"
-    tg_post_msg "<b>🚀 Compile Started:</b> <code>$KERNELNAME</code> for <code>$DEVICE</code>\n<b>⚙️ Compiler:</b> <code>$CLANG_VER</code>"
+    tg_post_msg "<b>🚀 Compile Started:</b> <code>$KERNELNAME</code> for <code>$DEVICE</code><b>⚙️ Compiler:</b> <code>$CLANG_VER</code>"
 
     rm -f error.log
     make -j$(nproc) $DEFCONFIG \
@@ -125,7 +125,7 @@ compile(){
 
 cd "$KERNEL_ROOTDIR"
     rm -rf AnyKernel
-    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b xobod AnyKernel
+    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
     
     cp $IMAGE AnyKernel/
     
@@ -169,7 +169,7 @@ function push() {
 
 # Find Error
 function finerr() {
-    curl -F document=@error.log "$BOT_BUILD_URL" \
+    curl -F document=@"error.log" "$BOT_BUILD_URL" \
         -F "chat_id=$TG_CHAT_ID" \
         -F "disable_web_page_preview=true" \
         -F "parse_mode=html" \
