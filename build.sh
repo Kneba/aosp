@@ -26,8 +26,8 @@ ClangPath="${MainPath}/clang"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=perf
-CODENAME=plus-fcc
+KERNELNAME=TOM
+CODENAME=Nightly
 BASE=android13-4.19-sdm660
 
 # Build dtbo.img (1 = Yes, 0 = No)
@@ -72,6 +72,7 @@ DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -80,7 +81,7 @@ command -v java > /dev/null 2>&1
 KERVER=$(cd $KERNEL_ROOTDIR; make kernelversion)
 
 # The name of the Kernel, to name the ZIP
-ZIPNAME="$KERNELNAME-$CODENAME-$-DEVICE-$KERVER"
+ZIPNAME="$KERNELNAME-$CODENAME-$DEVICE-$KERVER"
 
 # Telegram API
 export BOT_MSG_URL="https://api.telegram.org/bot$TG_TOKEN/sendMessage"
