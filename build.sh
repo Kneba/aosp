@@ -35,7 +35,8 @@ INCLUDE_DTBO=0
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
-DEVICE=X00TD
+DEVICE=X01BD
+DEFCONFIG=vendor/asus/X01BD_defconfig
 
 # Clone Kernel Source
 echo " "
@@ -109,7 +110,7 @@ compile(){
     tg_post_msg "<b>🚀 Compile Started:</b> <code>$KERNELNAME</code> for <code>$DEVICE</code>\n<b>⚙️ Compiler:</b> <code>$CLANG_VER</code>"
 
     rm -f error.log
-    make -j$(nproc) vendor/asus/X00TD_defconfig \
+    make -j$(nproc) $DEFCONFIG \
     ARCH=arm64 \
     O=out 2>&1 | tee -a error.log
     
@@ -124,7 +125,7 @@ compile(){
 
 cd "$KERNEL_ROOTDIR"
     rm -rf AnyKernel
-    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
+    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b xobod AnyKernel
     
     cp $IMAGE AnyKernel/
     
@@ -179,10 +180,10 @@ function finerr() {
 # Zipping
 function zipping() {
 	cd "$KERNEL_ROOTDIR"/AnyKernel || exit 1
-	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE2"
+	ZIP_FINAL="$ZIPNAME-$DATE"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
