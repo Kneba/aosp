@@ -35,8 +35,8 @@ INCLUDE_DTBO=0
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
-DEVICE=X00TD
-DEFCONFIG=vendor/asus/X00TD_defconfig
+DEVICE=X01BD
+DEFCONFIG=vendor/asus/X01BD_defconfig
 
 # Clone Kernel Source
 echo " "
@@ -72,7 +72,8 @@ DATE3=$(TZ=Asia/Jakarta date +"%d %b %Y, %H:%M %Z")
 START=$(date +"%s")
 
 #sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+#sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
+sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X01BD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -126,10 +127,10 @@ compile(){
 
 cd "$KERNEL_ROOTDIR"
     rm -rf AnyKernel
-    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
-    
+    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b xobod AnyKernel
+
     cp $IMAGE AnyKernel/
-    
+
     # Optional Logic for DTBO
     if [ "$INCLUDE_DTBO" -eq 1 ]; then
         msg "|| Include dtbo.img in the zip... ||"
