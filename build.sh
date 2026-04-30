@@ -27,7 +27,7 @@ ClangPath="${MainPath}/clang"
 # Identity
 ANDRVER=11-16
 KERNELNAME=TOM
-CODENAME=Nightly
+CODENAME=Newpart
 BASE=android13-4.19-sdm660
 
 # Build dtbo.img (1 = Yes, 0 = No)
@@ -35,8 +35,8 @@ INCLUDE_DTBO=0
 
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
-DEVICE=X01BD
-DEFCONFIG=vendor/asus/X01BD_defconfig
+DEVICE=X00TD
+DEFCONFIG=vendor/asus/X00TD_defconfig
 
 # Clone Kernel Source
 echo " "
@@ -73,7 +73,7 @@ START=$(date +"%s")
 
 #sed -i 's/.*CONFIG_DEBUG_INFO=.*/CONFIG_DEBUG_INFO=n/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
 #sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X00TD_defconfig
-sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X01BD_defconfig
+#sed -i 's/.*CONFIG_LOCALVERSION=.*/CONFIG_LOCALVERSION=TheOneMemory/g' $KERNEL_ROOTDIR/arch/arm64/configs/vendor/asus/X01BD_defconfig
 
 # Java
 command -v java > /dev/null 2>&1
@@ -127,7 +127,7 @@ compile(){
 
 cd "$KERNEL_ROOTDIR"
     rm -rf AnyKernel
-    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b xobod AnyKernel
+    git clone --depth=1 https://github.com/texascake/AnyKernel3 -b 4.19 AnyKernel
 
     cp $IMAGE AnyKernel/
 
