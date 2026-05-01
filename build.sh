@@ -41,7 +41,7 @@ DEFCONFIG=vendor/asus/X00TD_defconfig
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b 16 --single-branch kernel
+git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b newpart --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -182,10 +182,10 @@ function finerr() {
 # Zipping
 function zipping() {
 	cd "$KERNEL_ROOTDIR"/AnyKernel || exit 1
-	zip -r9 $ZIPNAME-"$DATE" * -x .git README.md ./*placeholder .gitignore zipsigner* *.zip
+	zip -r9 $ZIPNAME-"$DATE2" * -x .git README.md ./*placeholder .gitignore zipsigner* *.zip
  
 	## Prepare a final zip variable
-	ZIP_FINAL="$ZIPNAME-$DATE"
+	ZIP_FINAL="$ZIPNAME-$DATE2"
 
 	msg "|| Signing Zip ||"
 	tg_post_msg "<code>🔑 Signing Zip file with AOSP keys..</code>"
