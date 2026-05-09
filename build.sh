@@ -36,12 +36,12 @@ INCLUDE_DTBO=0
 # Show manufacturer info
 MANUFACTURERINFO="ASUSTek Computer Inc."
 DEVICE=X00TD
-DEFCONFIG=vendor/asus/X00TD_defconfig
+DEFCONFIG=vendor/X00TD_defconfig
 
 # Clone Kernel Source
 echo " "
 msg "|| Cloning Kernel Source ||"
-git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b newpart --single-branch kernel
+git clone --depth=1 https://github.com/sotodrom/kernel_asus_sdm660-4.19 -b master --single-branch kernel
 
 # Clone AOSP Clang
 [[ "$(pwd)" != "${MainPath}" ]] && cd "${MainPath}"
@@ -99,7 +99,7 @@ tg_post_msg() {
 # Compiler
 compile(){
     cd ${KERNEL_ROOTDIR}
-    curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
+#    curl -LSs "https://raw.githubusercontent.com/Sorayukii/KernelSU-Next/stable/kernel/setup.sh" | bash -s hookless
 
     export HASH_HEAD=$(git rev-parse --short HEAD)
     export COMMIT_HEAD=$(git log --oneline -1)
