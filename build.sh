@@ -26,8 +26,8 @@ ClangPath="${MainPath}/clang"
 
 # Identity
 ANDRVER=11-16
-KERNELNAME=TOM
-CODENAME=Newpart
+KERNELNAME=PERF
+CODENAME=NPS
 BASE=android13-4.19-sdm660
 
 # Build dtbo.img (1 = Yes, 0 = No)
