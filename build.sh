@@ -50,7 +50,7 @@ mkdir -p $ClangPath
 
 msg "|| Cloning AOSP Clang ||"
 ## clang 21 ##
-wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/f84ae476fcfdb2d039aa1f367bbdb8f2d1a33ec4/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
+wget -q https://android.googlesource.com/platform/prebuilts/clang/host/linux-x86/+archive/ebcc6c3bef363bc539ea39f45b6abae1dce6ff1a/clang-r574158.tar.gz -O "clang-r574158.tar.gz"
 tar -xf clang-r574158.tar.gz -C $ClangPath
 
 ##------------------------------------------------------##
